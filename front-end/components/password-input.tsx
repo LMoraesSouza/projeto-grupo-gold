@@ -13,12 +13,13 @@ const PasswordInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTM
   
         return (  
             <div className="relative">  
-                <Input  type={showPassword ? 'text' : 'password'}  
-                    className={cn('hide-password-toggle pr-10', className)}  
+                <Input type={showPassword ? 'text' : 'password'}  
+                    className={cn('hide-password-toggle pr-10', className)} 
                     ref={ref}  
                     {...props}  
                 />  
-                <Button  type="button"  
+                
+                <Button type="button"  
                     variant="ghost"  
                     size="sm"  
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"  
@@ -30,7 +31,8 @@ const PasswordInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTM
                     )}  
                     <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>  
                 </Button> <style>{`.hide-password-toggle::-ms-reveal,.hide-password-toggle::-ms-clear {visibility: hidden;pointer-events: none; display: none;}`}</style>  
- </div>  );  
+            </div>
+        );  
     }  
 );  
   

@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import z from 'zod';
 import { PasswordInput } from '@/components/password-input';
+import { useAuth } from '@/hooks/useAuth';
 
 const formSchema = z.object({
     email: z.string().nonempty("E-mail é obrigatório").email("E-mail inválido"),
@@ -23,18 +24,28 @@ const formSchema = z.object({
 type FormValues = z.input<typeof formSchema>;
 
 export function SignIn() {
+    const { login } = useAuth();
+
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        }
     })
 
     function handleSubmit(values: FormValues){
-        console.log(values)
+        const loginData = {
+            ...values,
+            role: 'admin'
+        }
+        login(loginData)
     }
 
     return (
         <div className='space-y-8 flex flex-col items-center lg:pt-53 max-w-md pt-26'>
             <Image
-                src='/logo.svg'
+                src='./public/logo.svg'
                 alt="Logo Goold"
                 width={57}
                 height={57}
@@ -48,7 +59,7 @@ export function SignIn() {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>E-mail</FormLabel>
+                                <FormLabel><span className="font-semibold">E-mail</span>(Obrigatório)</FormLabel>
                                 <FormControl>
                                     <Input 
                                         type="email" 
@@ -64,11 +75,11 @@ export function SignIn() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Senha de acesso</FormLabel>
+                                <FormLabel><span className='font-semibold'>Senha de acesso</span>(Obrigatório)</FormLabel>
                                 <FormControl>
-                                    <PasswordInput 
+                                     <PasswordInput 
                                         {...field} 
-                                    />
+                                    /> 
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

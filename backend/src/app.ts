@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import sequelize from './config/database';
 import userRoutes from './routes/userRoutes';
 import roomRoutes from './routes/roomRoutes';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get('/api', (req: Request, res: Response) => {
     res.json({

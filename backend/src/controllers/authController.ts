@@ -69,38 +69,32 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 // Login de usuário
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
 
-        // Validar entrada
-        if (!email || !password) {
-            res.status(400).json({ error: 'Please provide email and password' });
+        if (!email || !password || !role) {
+            res.status(400).json({ error: 'Please provide email, password, and role' });
             return;
         }
 
-        // Buscar usuário
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({ where: { email, role } });
         if (!user) {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
         }
 
-        // Verificar se usuário está ativo
         if (!user.isActive) {
             res.status(401).json({ error: 'Account is deactivated' });
             return;
         }
 
-        // Verificar senha
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
         }
 
-        // Gerar token
         const token = generateToken(user.id, user.email, user.role);
 
-        // Atualizar última data de login (opcional)
         // await user.update({ updatedAt: new Date() });
 
         // remove senha da resposta

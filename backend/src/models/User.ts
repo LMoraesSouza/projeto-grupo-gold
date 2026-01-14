@@ -111,9 +111,6 @@ User.init(
         sequelize,
         tableName: 'users',
         timestamps: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] }
-        },
         hooks: {
             beforeCreate: User.hashPassword,
             beforeUpdate: User.hashPassword
