@@ -10,7 +10,6 @@ dotenv.config();
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,7 +39,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-// Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error('Error:', err);
     res.status(500).json({
@@ -49,7 +47,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-// Test database connection
+// Test db connection
 const testConnection = async (): Promise<void> => {
     try {
         await sequelize.authenticate();

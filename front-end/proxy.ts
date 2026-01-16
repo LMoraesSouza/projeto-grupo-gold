@@ -3,19 +3,37 @@ import type { NextRequest } from 'next/server';
 
 export function proxy(request: NextRequest) {
     const token = request.cookies.get('token')?.value;
+    const userData = request.cookies.get('userData')?.value;
+
     const { pathname } = request.nextUrl;
 
     const publicRoutes = ['/admin/sign-in', '/sign-up', '/sign-in'];
 
-    if (!publicRoutes.includes(pathname) && !token) {
-        return NextResponse.redirect(new URL('/admin/sign-in', request.url));
+    console.log(token, userData, pathname);
+
+    if (publicRoutes.includes(pathname)) {
+        return NextResponse.next();
     }
 
-    if (token && (pathname === '/login' || pathname === '/register')) {
-        return NextResponse.redirect(new URL('/agendamentos', request.url));
+    if (token && validateUserRole(userData, pathname)) {
+        return NextResponse.next();
     }
 
-    return NextResponse.next();
+    return NextResponse.redirect(new URL(pathname.startsWith('/admin') ? '/admin/sign-in' : '/sign-in', request.url));
+
+
+}
+
+function validateUserRole(userData: string | undefined, pathname: string) {
+    const user = JSON.parse(userData || '{}');
+
+    if (pathname.startsWith('/admin')) {
+        return user.role === 'admin';
+    }
+
+    return user.role === 'user';
+
+
 }
 
 export const config = {

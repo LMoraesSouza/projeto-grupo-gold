@@ -38,7 +38,7 @@ class User extends Model<UserAttributes, UserCreationAttributes>
         return bcrypt.compare(candidatePassword, this.password);
     }
 
-    //hook criptografa senha   
+    //hook de criptografia de senha   
     public static async hashPassword(user: User): Promise<void> {
         if (user.changed('password')) {
             const salt = await bcrypt.genSalt(10);

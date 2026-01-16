@@ -28,7 +28,6 @@ export const authenticate = async (
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as JwtPayload;
 
-        // Buscar usuário no banco
         const user = await User.findByPk(decoded.userId, {
             attributes: { exclude: ['password'] }
         });

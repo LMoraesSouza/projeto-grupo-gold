@@ -66,7 +66,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-// Login de usuário
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email, password, role } = req.body;
@@ -77,6 +76,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         }
 
         const user = await User.findOne({ where: { email, role } });
+        console.log(user)
         if (!user) {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
@@ -113,11 +113,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-// Logout (client-side apenas, token é invalidado no front)
 export const logout = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        // Em uma aplicação real, você pode adicionar o token a uma blacklist
-        // ou usar refresh tokens. Para JWT simples, o logout é feito no client.
 
         res.status(200).json({
             success: true,

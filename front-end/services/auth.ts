@@ -1,6 +1,7 @@
 import { LoginRequest, RegisterRequest } from '@/types/requests';
 import api, { setAuthToken, removeAuthToken, getAuthToken } from './api';
 import { User } from '@/types/entities';
+import { EntityResponse } from '@/types/responses';
 
 export interface AuthResponse {
     success: boolean;
@@ -40,8 +41,9 @@ export const logout = async (): Promise<void> => {
 };
 
 export const getCurrentUser = async (): Promise<User> => {
-    const response = await api.get<User>('/users/me');
-    return response.data;
+    const response = await api.get<EntityResponse<'user'>>('/auth/profile');
+
+    return response.data.user;
 };
 
 export const isAuthenticated = (): boolean => {

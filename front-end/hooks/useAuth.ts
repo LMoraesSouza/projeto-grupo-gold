@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import authService from '@/services/auth';
 import { LoginRequest, RegisterRequest } from '@/types/requests';
 import { User } from '@/types/entities';
+import Cookies from 'js-cookie'
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -15,9 +16,14 @@ export const useAuth = () => {
         const loadUser = async () => {
             if (authService.isAuthenticated()) {
                 try {
+                    if (Cookies.get('userData')) {
+                        setUser(JSON.parse(Cookies.get('userData') as string));
+                        return;
+                    }
                     const userData = await authService.getCurrentUser();
-                    console.log(userData);
+                    console.log(userData, 'user data no hook');
                     setUser(userData);
+                    Cookies.set('userData', JSON.stringify(userData));
                 } catch (err) {
                     if (err) {
                         setError('Erro ao carregar usuário');
@@ -39,6 +45,7 @@ export const useAuth = () => {
         try {
             const result = await authService.login({ email, password, role });
             setUser(result.user);
+            Cookies.set('userData', JSON.stringify(result.user));
             if (result.user.role === 'admin') {
                 router.push('/admin/agendamentos');
             } else {
@@ -62,6 +69,11 @@ export const useAuth = () => {
         try {
             const result = await authService.register({ name, email, password, role });
             setUser(result.user);
+            Cookies.set('userData', JSON.stringify(result.user));
+            console.log('User data set in cookies:', Cookies.get('userData'));
+            if (result.user.role === 'admin') {
+                router.push('/admin/agendamentos');
+            }
             router.push('/agendamentos');
             return result;
         } catch (err: unknown) {
@@ -78,6 +90,7 @@ export const useAuth = () => {
         try {
             await authService.logout();
             setUser(null);
+            Cookies.remove('userData');
             router.push('/login');
         } catch (err: unknown) {
             setError((err as Error).message || 'Erro no logout');
