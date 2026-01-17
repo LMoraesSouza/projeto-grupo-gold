@@ -28,44 +28,40 @@ export function Navigation({hideBar}: {hideBar?: () => void}) {
         {
             href: ROUTES.ADMIN_DASHBOARD,
             label: 'Agendamentos',
-            role: 'admin',
+            role: 'ADMIN',
             icon: AppointmentIcon
         },
         {
             href: ROUTES.CLIENTS,
             label: 'Clientes',
-            role: 'admin',
+            role: 'ADMIN',
             icon: RiUserLine
         },
         {
             href: ROUTES.ADMIN_LOGS,
             label: 'Logs',
-            role: 'admin',
+            role: 'ADMIN',
             icon: LogsIcon,
         },
         {
             href: ROUTES.DASHBOARD,
             label: 'Agendamentos',
-            role: 'user',
+            role: 'CLIENT',
             icon: AppointmentIcon
         },
         {
             href: ROUTES.MY_ACCOUNT,
             label: 'Minha Conta',
-            role: 'user',
+            role: 'CLIENT',
             icon: MyAccountIcon
         },
         {
             href : ROUTES.LOGS,
             label: 'Logs',
-            role: 'user',
+            role: 'CLIENT',
             icon: LogsIcon,
         }
     ]
-
-
-
-    console.log(user, user ? routes.filter(route => route.role === user?.role) : 'vazio');
 
     return (
         <nav className='flex flex-col gap-y-2 pt-5 pr-4 pl-4 border-t'>

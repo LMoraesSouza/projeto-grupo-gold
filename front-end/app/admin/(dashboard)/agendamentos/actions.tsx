@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { useAppointmentStore } from "@/stores/appointmentsStore"
 import { RiCheckLine, RiCloseLargeLine } from "@remixicon/react"
 
 type ActionsProps = {
@@ -11,18 +12,25 @@ export function Actions ({
     status
 }: ActionsProps) {
 
+       const { 
+            updateAppointment,
+            getAppointments
+        } = useAppointmentStore();
+
     function handleClickCancel() {
-        console.log(id)
+        updateAppointment(id, {status: "canceled"})
+        getAppointments()
     }
 
     function handleClickConfirm() {
-        console.log(id)
+        updateAppointment(id, {status: "scheduled"})
+        getAppointments()
     }
 
     return (
         <div className="space-x-2.5">
            {
-                status !== "Cancelado" &&
+                status !== "CANCELED" &&
                 <Button 
                     className="rounded-full color size-7.5"
                     onClick={handleClickCancel} 
@@ -31,7 +39,7 @@ export function Actions ({
                 </Button>
            } 
            {
-                status === "Em análise" && 
+                status === "PENDING" && 
             
                 <Button 
                     onClick={handleClickConfirm} 

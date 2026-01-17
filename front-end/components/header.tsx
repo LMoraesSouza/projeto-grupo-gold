@@ -32,19 +32,19 @@ const route = {
         title: 'Agendamentos',
         description: 'Acompante todos os seus agendamentos de forma simples',
         href: ROUTES.DASHBOARD,
-        role: 'user'
+        role: 'client'
     },
     [ROUTES.LOGS]: {
         title: 'Logs',
         description: 'Acompanhe todos as suas Logs',
         href: ROUTES.LOGS,
-        role: 'user'
+        role: 'client'
     },
     [ROUTES.MY_ACCOUNT]: {
         title: 'Minha Conta',
         description: 'Ajuste informações da sua conta de forma simples',
         href: ROUTES.MY_ACCOUNT,
-        role: 'user'
+        role: 'client'
     }
 
 }

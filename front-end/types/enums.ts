@@ -1,14 +1,14 @@
 export const APPOINTMENT_STATUS = {
+    PENDING: 'pending',
     SCHEDULED: 'scheduled',
-    CONFIRMED: 'confirmed',
     CANCELED: 'canceled',
     COMPLETED: 'completed',
 };
 
-export type AppointmentStatus = typeof APPOINTMENT_STATUS[keyof typeof APPOINTMENT_STATUS];
+export type AppointmentStatus = keyof typeof APPOINTMENT_STATUS;
 
 export const USER_ROLES = {
-    USER: 'user',
+    CLIENT: 'client',
     ADMIN: 'admin',
 };
 
@@ -24,4 +24,4 @@ export const ROUTES = {
     ADMIN_LOGS: '/admin/logs',
 }
 
-export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
+export type UserRole = keyof typeof USER_ROLES;

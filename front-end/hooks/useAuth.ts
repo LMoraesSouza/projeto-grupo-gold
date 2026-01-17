@@ -46,7 +46,7 @@ export const useAuth = () => {
             const result = await authService.login({ email, password, role });
             setUser(result.user);
             Cookies.set('userData', JSON.stringify(result.user));
-            if (result.user.role === 'admin') {
+            if (result.user.role === 'ADMIN') {
                 router.push('/admin/agendamentos');
             } else {
                 router.push('/agendamentos');
@@ -71,7 +71,7 @@ export const useAuth = () => {
             setUser(result.user);
             Cookies.set('userData', JSON.stringify(result.user));
             console.log('User data set in cookies:', Cookies.get('userData'));
-            if (result.user.role === 'admin') {
+            if (result.user.role === 'ADMIN') {
                 router.push('/admin/agendamentos');
             }
             router.push('/agendamentos');

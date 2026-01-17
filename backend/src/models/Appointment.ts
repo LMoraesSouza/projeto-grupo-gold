@@ -1,4 +1,4 @@
-import { Model, DataTypes, Optional, BelongsToGetAssociationMixin } from 'sequelize';
+import { Model, DataTypes, Optional, BelongsToGetAssociationMixin, Association } from 'sequelize';
 import sequelize from '../config/database';
 import User from './User';
 import Room from './Room';
@@ -7,23 +7,19 @@ interface AppointmentAttributes {
     id: number;
     userId: number;
     roomId: number;
-    title: string;
-    description?: string;
     dateTime: Date;
-    status: 'scheduled' | 'confirmed' | 'canceled' | 'completed';
+    status: 'pending' | 'scheduled' | 'canceled' | 'completed';
 }
 
-interface AppointmentCreationAttributes extends Optional<AppointmentAttributes, 'id' | 'status' | 'description'> { }
+interface AppointmentCreationAttributes extends Optional<AppointmentAttributes, 'id' | 'status'> { }
 
 class Appointment extends Model<AppointmentAttributes, AppointmentCreationAttributes>
     implements AppointmentAttributes {
     public id!: number;
     public userId!: number;
-    public title!: string;
-    public description!: string;
     public dateTime!: Date;
     public roomId!: number;
-    public status!: 'scheduled' | 'confirmed' | 'canceled' | 'completed';
+    public status!: 'pending' | 'scheduled' | 'canceled' | 'completed';
 
     // Relacionamentos
     public getUser!: BelongsToGetAssociationMixin<User>;
@@ -31,6 +27,11 @@ class Appointment extends Model<AppointmentAttributes, AppointmentCreationAttrib
 
     public getRoom!: BelongsToGetAssociationMixin<Room>;
     public readonly room?: Room;
+
+    public static associations: {
+        user: Association<Appointment, User>;
+        room: Association<Appointment, Room>;
+    };
 }
 
 Appointment.init(
@@ -50,19 +51,6 @@ Appointment.init(
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
         },
-        title: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-                len: [3, 100]
-            }
-        },
-        description: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-            defaultValue: ''
-        },
         dateTime: {
             type: DataTypes.DATE,
             allowNull: false,
@@ -76,24 +64,29 @@ Appointment.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'room',
+                model: 'rooms',
                 key: 'id'
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
         },
         status: {
-            type: DataTypes.ENUM('scheduled', 'confirmed', 'canceled', 'completed'),
+            type: DataTypes.ENUM('pending', 'scheduled', 'canceled', 'completed'),
             allowNull: false,
-            defaultValue: 'scheduled',
+            defaultValue: 'pending',
             validate: {
-                isIn: [['scheduled', 'confirmed', 'canceled', 'completed']]
+                isIn: [['pending', 'scheduled', 'canceled', 'completed']]
+            },
+            get() {
+                // Sempre retorna como UPPERCASE
+                const rawValue = this.getDataValue('status');
+                return rawValue ? rawValue.toUpperCase() : rawValue;
             }
         }
     },
     {
         sequelize,
-        tableName: 'appointment',
+        tableName: 'appointments',
         timestamps: true,
         indexes: [
             {
@@ -108,12 +101,20 @@ Appointment.init(
             {
                 fields: ['status']
             },
-            {
-                fields: ['room']
-            },
         ],
 
     }
 );
+
+Appointment.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user'
+});
+
+Appointment.belongsTo(Room, {
+    foreignKey: 'roomId',
+    as: 'room'
+});
+
 
 export default Appointment;

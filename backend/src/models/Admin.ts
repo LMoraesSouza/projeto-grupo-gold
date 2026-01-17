@@ -1,60 +1,39 @@
-import { Model, DataTypes, Optional, HasManyGetAssociationsMixin, Association, HasManyAddAssociationMixin, HasManyHasAssociationMixin, BelongsToGetAssociationMixin } from 'sequelize';
+import { Model, DataTypes, Optional, HasManyGetAssociationsMixin, Association, HasManyAddAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import sequelize from '../config/database';
 import bcrypt from 'bcryptjs';
 import Appointment from './Appointment';
-import Permission from './Permission';
 
-interface UserAttributes {
+interface AdminAttributes {
     id: number;
     name: string;
     lastName: string;
     email: string;
     password: string;
-    role: 'client';
+    role: 'admin';
     isActive: boolean;
-    zipCode: string;
-    address: string;
-    number: string;
-    complement: string;
-    district: string;
-    city: string;
-    state: string;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'role' | 'isActive'> { }
+interface AdminCreationAttributes extends Optional<AdminAttributes, 'id' | 'role' | 'isActive'> { }
 
-class User extends Model<UserAttributes, UserCreationAttributes>
-    implements UserAttributes {
+class Admin extends Model<AdminAttributes, AdminCreationAttributes>
+    implements AdminAttributes {
     public id!: number;
     public name!: string;
     public lastName!: string;
     public email!: string;
     public password!: string;
-    public role: 'client' = 'client';
+    public role: 'admin' = 'admin';
     public isActive!: boolean;
-    public zipCode!: string;
-    public address!: string;
-    public number!: string;
-    public complement!: string;
-    public district!: string;
-    public city!: string;
-    public state!: string;
 
     public getAppointments!: HasManyGetAssociationsMixin<Appointment>;
     public addAppointment!: HasManyAddAssociationMixin<Appointment, number>;
     public hasAppointment!: HasManyHasAssociationMixin<Appointment, number>;
 
-    public getPermission!: HasManyGetAssociationsMixin<Permission>;
-    public addPermission!: HasManyAddAssociationMixin<Permission, number>;
-    public hasPermission!: HasManyHasAssociationMixin<Permission, number>;
-
     // Associations
     public readonly appointments?: Appointment[];
-    public readonly permissions?: Permission[];
 
     public static associations: {
-        appointments: Association<User, Appointment>;
-        permissions: Association<User, Permission>;
+        appointments: Association<Admin, Appointment>;
     };
 
     public async comparePassword(candidatePassword: string): Promise<boolean> {
@@ -66,30 +45,15 @@ class User extends Model<UserAttributes, UserCreationAttributes>
     }
 
     //hook de criptografia de senha   
-    public static async hashPassword(user: User): Promise<void> {
+    public static async hashPassword(user: Admin): Promise<void> {
         if (user.changed('password')) {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(user.password, salt);
         }
     }
-
-    //hook de criação de permissões
-    // public static async createPermissions(user: User): Promise<void> {
-    //     Permission.create({
-    //         userId: user.id,
-    //         access: 'logs',
-    //         isActive: true
-    //     })
-
-    //     Permission.create({
-    //         userId: user.id,
-    //         access: 'appointments',
-    //         isActive: true
-    //     })
-    // }
 }
 
-User.init(
+Admin.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -122,6 +86,7 @@ User.init(
                 }
             }
         },
+
         email: {
             type: DataTypes.STRING(100),
             allowNull: false,
@@ -152,7 +117,7 @@ User.init(
             }
         },
         role: {
-            type: DataTypes.ENUM('client', 'user'),
+            type: DataTypes.ENUM('client', 'admin'),
             defaultValue: 'client',
             allowNull: false,
             get() {
@@ -166,73 +131,17 @@ User.init(
             defaultValue: true,
             allowNull: false
         },
-        zipCode: {
-            type: DataTypes.STRING(0),
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'Zip code is required'
-                },
-            }
-        },
 
-        address: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'Address is required'
-                },
-            }
-        },
-        number: {
-            type: DataTypes.STRING(6),
-            allowNull: false,
-        },
-        complement: {
-            type: DataTypes.STRING(100),
-            allowNull: true,
-        },
-        district: {
-            type: DataTypes.STRING(80),
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'District is required'
-                },
-            }
-        },
-        city: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'City is required'
-                },
-            }
-        },
-        state: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'State is required'
-                },
-            }
-        },
     },
     {
         sequelize,
-        tableName: 'users',
+        tableName: 'administrators',
         timestamps: true,
         hooks: {
-            beforeCreate: User.hashPassword,
-            beforeUpdate: User.hashPassword,
-            // afterCreate: User.createPermissions,
+            beforeCreate: Admin.hashPassword,
+            beforeUpdate: Admin.hashPassword
         }
     }
 );
 
-
-
-export default User;
+export default Admin;

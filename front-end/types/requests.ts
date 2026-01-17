@@ -20,6 +20,7 @@ export interface UpdateUserRequest {
     email?: string;
     role?: UserRole;
     password?: string;
+    isActive?: boolean;
 }
 
 //salas
@@ -37,20 +38,28 @@ export interface UpdateRoomRequest {
 export interface CreateAppointmentRequest {
     userId: number;
     roomId: number;
-    title: string;
-    description?: string;
-    startDateTime: string;
-    endDateTime: string;
-    status?: AppointmentStatus;
+    dateTime: Date;
+    status: 'scheduled' | 'confirmed' | 'canceled' | 'completed';
 }
 
 export interface UpdateAppointmentRequest {
-    title?: string;
-    description?: string;
-    startDateTime?: string;
-    endDateTime?: string;
-    status?: AppointmentStatus;
+    userId?: number;
     roomId?: number;
+    dateTime?: Date;
+    status?: 'scheduled' | 'confirmed' | 'canceled' | 'completed';
+}
+
+//permissões
+export interface UpdatePermissionRequest {
+    access: string;
+    isActive: boolean;
+    userId: number;
+}
+
+export interface CreatePermissionRequest {
+    access: string;
+    isActive: boolean;
+    userId: number;
 }
 
 // Filtros

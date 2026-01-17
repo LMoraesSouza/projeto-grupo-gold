@@ -2,9 +2,23 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database';
+import setupAssociations from './models/associations';
 import userRoutes from './routes/userRoutes';
 import roomRoutes from './routes/roomRoutes';
 import authRoutes from './routes/authRoutes';
+import appointmentRoutes from './routes/appointmentsRoutes';
+import permissionRoutes from './routes/permissionRoutes';
+import User from './models/User';
+import Room from './models/Room';
+import Appointment from './models/Appointment';
+
+import './models/User';
+import './models/Permission';
+import './models/Appointment';
+
+setupAssociations();
+
+const mock = require('../mock.js')
 
 dotenv.config();
 
@@ -18,6 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', userRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/permissions', permissionRoutes);
 
 app.get('/api', (req: Request, res: Response) => {
     res.json({
@@ -50,12 +66,20 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Test db connection
 const testConnection = async (): Promise<void> => {
     try {
-        await sequelize.authenticate();
         console.log('Database connection established successfully.');
+        await sequelize.authenticate();
         if (process.env.NODE_ENV === 'development') {
             await sequelize.sync({ alter: true });
             console.log('Database synced.');
         }
+        // console.log(mock.appointments)
+
+        // if (mock) {
+        //     console.log(mock.appointments)
+        //     mock.appointments.map(async (appointment: any) => {
+        //         await Appointment.create(appointment);
+        //     })
+        // }
 
     } catch (error) {
         console.error('Unable to connect to the database:', error);

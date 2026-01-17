@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { AuthRequest } from '../middlewares/authMiddleware';
+import Admin from '../models/Admin';
 
 // gera token
 export const generateToken = (userId: number, email: string, role: string): string => {
@@ -21,12 +22,21 @@ export const generateToken = (userId: number, email: string, role: string): stri
     );
 };
 
+export const getUser = async (email: string, role: string): Promise<User | Admin | null> => {
+
+    if (role === 'admin') {
+        return await Admin.findOne({ where: { email } });
+    }
+
+    return await User.findOne({ where: { email } });
+}
+
 //novo usuário
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { name, email, password } = req.body;
+        const { name, lastName, email, password, role, zipCode, address, number, complement, district, city, state } = req.body;
 
-        const existingUser = await User.findOne({ where: { email } });
+        const existingUser = await User.findOne({ where: { email, role } });
         if (existingUser) {
             res.status(400).json({ error: 'Email já cadastrado' });
             return;
@@ -34,8 +44,17 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
         const user = await User.create({
             name,
+            lastName,
             email,
-            password
+            role,
+            password,
+            zipCode,
+            address,
+            number,
+            complement,
+            district,
+            city,
+            state
         });
 
         const token = generateToken(user.id, user.email, user.role);
@@ -75,8 +94,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const user = await User.findOne({ where: { email, role } });
-        console.log(user)
+        const user = await getUser(email, role);
+
         if (!user) {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
@@ -98,13 +117,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         // await user.update({ updatedAt: new Date() });
 
         // remove senha da resposta
+        user.removePassword();
         const jsonUser = user.toJSON();
-        const { password: _, ...userResponse } = jsonUser;
 
+        console.log(user, jsonUser)
         res.status(200).json({
             success: true,
             message: 'Login successful',
-            user: userResponse,
+            user: jsonUser,
             token
         });
     } catch (error: any) {

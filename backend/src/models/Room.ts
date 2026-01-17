@@ -1,5 +1,6 @@
-import { Model, DataTypes, Optional } from 'sequelize';
+import { Model, DataTypes, Optional, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association } from 'sequelize';
 import sequelize from '../config/database';
+import Appointment from './Appointment';
 
 interface RoomAttributes {
     id: number;
@@ -12,6 +13,17 @@ class Room extends Model<RoomAttributes, RoomCreationAttributes>
     implements RoomAttributes {
     public id!: number;
     public name!: string;
+
+    public getAppointments!: HasManyGetAssociationsMixin<Appointment>;
+    public addAppointment!: HasManyAddAssociationMixin<Appointment, number>;
+    public hasAppointment!: HasManyHasAssociationMixin<Appointment, number>;
+
+    // Associations
+    public readonly appointments?: Appointment[];
+
+    public static associations: {
+        appointments: Association<Room, Appointment>;
+    };
 }
 
 Room.init(
@@ -33,11 +45,10 @@ Room.init(
     },
     {
         sequelize,
-        tableName: 'room',
+        tableName: 'rooms',
         timestamps: true,
         indexes: [
             {
-                unique: true,
                 fields: ['name']
             }
         ]
