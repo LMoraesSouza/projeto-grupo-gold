@@ -33,6 +33,14 @@ export interface Room extends BaseEntity {
     description: string;
 }
 
+export interface Log extends BaseEntity {
+    activityDescription: string;
+    module: string;
+    userId: number;
+    user: User;
+}
+
+
 export interface Appointment extends BaseEntity {
     userId: number;
     roomId: number;

@@ -154,7 +154,66 @@ const appointments = [
 
 ]
 
+const logs = [
+    {
+        userId: 4,
+        activityDescription: 'Criação de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 5,
+        activityDescription: 'Login',
+        module: 'my account',
+    },
+    {
+        userId: 6,
+        activityDescription: 'Logout',
+        module: 'my account',
+    },
+    {
+        userId: 8,
+        activityDescription: 'Cancelamento de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 8,
+        activityDescription: 'Atualização de cadastro',
+        module: 'my account',
+    },
+    {
+        userId: 4,
+        activityDescription: 'Cancelamento de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 7,
+        activityDescription: 'Cancelamento de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 9,
+        activityDescription: 'Criação de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 9,
+        activityDescription: 'Criação de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 9,
+        activityDescription: 'Criação de agendamento',
+        module: 'appointments',
+    },
+    {
+        userId: 9,
+        activityDescription: 'Atualização de cadastro',
+        module: 'my account',
+    },
+]
+
 module.exports = {
     users,
-    appointments
+    appointments,
+    logs
 };

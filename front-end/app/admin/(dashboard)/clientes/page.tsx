@@ -9,7 +9,6 @@ import { useUserStore } from "@/stores/userStore";
 export default function AppointmentsPage() {
     const { 
         users, 
-        getUsers
     } = useUserStore();
     
     const filters = [
@@ -28,8 +27,7 @@ export default function AppointmentsPage() {
     ]
 
     useEffect(() => {
-        getUsers()
-        console.log(users)
+       
     }, [])
 
     return(

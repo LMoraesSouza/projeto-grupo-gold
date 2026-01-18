@@ -21,7 +21,6 @@ export const useAuth = () => {
                         return;
                     }
                     const userData = await authService.getCurrentUser();
-                    console.log(userData, 'user data no hook');
                     setUser(userData);
                     Cookies.set('userData', JSON.stringify(userData));
                 } catch (err) {
@@ -43,6 +42,7 @@ export const useAuth = () => {
         setError(null);
 
         try {
+            console.log(email, password, role)
             const result = await authService.login({ email, password, role });
             setUser(result.user);
             Cookies.set('userData', JSON.stringify(result.user));
@@ -70,7 +70,6 @@ export const useAuth = () => {
             const result = await authService.register({ name, email, password, role });
             setUser(result.user);
             Cookies.set('userData', JSON.stringify(result.user));
-            console.log('User data set in cookies:', Cookies.get('userData'));
             if (result.user.role === 'ADMIN') {
                 router.push('/admin/agendamentos');
             }

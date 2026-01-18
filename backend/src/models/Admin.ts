@@ -86,7 +86,6 @@ Admin.init(
                 }
             }
         },
-
         email: {
             type: DataTypes.STRING(100),
             allowNull: false,

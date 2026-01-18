@@ -21,7 +21,6 @@ export function Permissions ({
         } = useUserStore();
 
     function handleClickAppointments() {
-        console.log(!appointmentsPermission?.isActive)
         const permissionRequest = {
             access: appointmentsPermission?.access.toLowerCase() || 'appointments',
             isActive: appointmentsPermission? !appointmentsPermission?.isActive : false,
@@ -31,7 +30,6 @@ export function Permissions ({
         updateUserPermissions(permissionRequest, appointmentsPermission?.id)
     }
     function handleClickLogs() {
-        console.log(!logsPermission?.isActive)
         const permissionRequest = {
             access: logsPermission?.access.toLowerCase() || 'logs',
             isActive: logsPermission? !logsPermission?.isActive : false,

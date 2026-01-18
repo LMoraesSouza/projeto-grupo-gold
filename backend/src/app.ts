@@ -8,6 +8,7 @@ import roomRoutes from './routes/roomRoutes';
 import authRoutes from './routes/authRoutes';
 import appointmentRoutes from './routes/appointmentsRoutes';
 import permissionRoutes from './routes/permissionRoutes';
+import logRoutes from './routes/logRoutes';
 import User from './models/User';
 import Room from './models/Room';
 import Appointment from './models/Appointment';
@@ -15,6 +16,7 @@ import Appointment from './models/Appointment';
 import './models/User';
 import './models/Permission';
 import './models/Appointment';
+import Log from './models/Log';
 
 setupAssociations();
 
@@ -34,6 +36,7 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/permissions', permissionRoutes);
+app.use('/api/logs', logRoutes);
 
 app.get('/api', (req: Request, res: Response) => {
     res.json({
@@ -75,9 +78,9 @@ const testConnection = async (): Promise<void> => {
         // console.log(mock.appointments)
 
         // if (mock) {
-        //     console.log(mock.appointments)
-        //     mock.appointments.map(async (appointment: any) => {
-        //         await Appointment.create(appointment);
+        //     console.log(mock.logs)
+        //     mock.logs.map(async (log: any) => {
+        //         await Log.create(log);
         //     })
         // }
 

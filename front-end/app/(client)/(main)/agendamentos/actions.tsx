@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { useAppointmentStore } from "@/stores/appointmentsStore"
-import { RiCheckLine, RiCloseLargeLine } from "@remixicon/react"
+import { RiCloseLargeLine } from "@remixicon/react"
 
 type ActionsProps = {
     id: number
@@ -22,10 +22,10 @@ export function Actions ({
         getMyAppointments()
     }
 
-    function handleClickConfirm() {
-        updateAppointment(id, {status: "scheduled"})
-        getMyAppointments()
-    }
+    // function handleClickConfirm() {
+    //     updateAppointment(id, {status: "scheduled"})
+    //     getMyAppointments()
+    // }
 
     return (
         <div className="space-x-2.5">
@@ -38,7 +38,7 @@ export function Actions ({
                     <RiCloseLargeLine size={12}/>  
                 </Button>
            } 
-           {
+           {/* {
                 status === "PENDING" && 
             
                 <Button 
@@ -47,7 +47,7 @@ export function Actions ({
                 >
                     <RiCheckLine size={22}/>  
                 </Button>
-           }
+           } */}
         </div>
         
     )

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Appointment from '../models/Appointment';
 import Room from '../models/Room';
 import User from '../models/User';
+import { logActivity } from './logController';
 
 export const getAllAppointments = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -58,6 +59,8 @@ export const createAppointment = async (req: Request, res: Response): Promise<vo
 
         const appointment = await Appointment.create({ userId, dateTime, roomId });
 
+        await logActivity('Criação de agendamento', 'appointments', userId);
+
         res.status(201).json(appointment);
     } catch (error) {
         res.status(500).json({ error: 'Error creating appointment' });
@@ -66,7 +69,7 @@ export const createAppointment = async (req: Request, res: Response): Promise<vo
 
 export const updateAppointmentStatus = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { status } = req.body;
+        const { status, userId } = req.body;
         const { id } = req.params;
 
         const appointment = await Appointment.findByPk(id);
@@ -78,6 +81,10 @@ export const updateAppointmentStatus = async (req: Request, res: Response): Prom
 
         appointment.status = status;
         await appointment.save();
+
+        if (userId && status === 'canceled') {
+            await logActivity('Cancelamento de agendamento', 'appointments', userId);
+        }
 
         res.status(200).json(appointment);
 

@@ -141,7 +141,6 @@ export function DataTable<TData, TValue>({
                                             </TableCell>
                                             ))}
                                         </TableRow>
-
                                     )
                                 }
 

@@ -11,8 +11,8 @@ export default function SignInPage() {
   
   if (userData) {
     const user = JSON.parse(userData);
-    if (user.role === 'ADMIN') {
-      router.push('/admin/agendamentos');
+    if (user.role === 'client') {
+      router.push('/agendamentos');
     }
   }
   

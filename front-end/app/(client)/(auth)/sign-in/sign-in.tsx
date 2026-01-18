@@ -38,7 +38,7 @@ export function SignIn() {
     function handleSubmit(values: FormValues){
         const loginData: LoginRequest = {
             ...values,
-            role: 'ADMIN'
+            role: 'CLIENT'
         }
         login(loginData)
     }
@@ -51,7 +51,7 @@ export function SignIn() {
                 width={57}
                 height={57}
             />
-            <h1 className='font-semibold text-black text-[1.75rem] leading-12.5 '>Login Admin</h1>
+            <h1 className='font-semibold text-black text-[1.75rem] leading-12.5 '>Entre na sua conta</h1>
             
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-3.75 bg-white p-7.5 rounded-md border-solid  border lg:w-md">

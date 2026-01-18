@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { AuthRequest } from '../middlewares/authMiddleware';
 import Admin from '../models/Admin';
+import { logActivity } from './logController';
 
 // gera token
 export const generateToken = (userId: number, email: string, role: string): string => {
@@ -57,6 +58,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             state
         });
 
+        await logActivity('Usuário criado', 'my account', user.id);
+
         const token = generateToken(user.id, user.email, user.role);
 
         // remove senha da resposta
@@ -94,8 +97,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const user = await getUser(email, role);
-
+        const user = await getUser(email, role.toLowerCase());
         if (!user) {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
@@ -107,9 +109,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         }
 
         const isPasswordValid = await user.comparePassword(password);
+        console.log(isPasswordValid)
+
         if (!isPasswordValid) {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
+        }
+
+        if (role === 'client') {
+            await logActivity('Login', 'my account', user.id);
         }
 
         const token = generateToken(user.id, user.email, user.role);
@@ -135,6 +143,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const logout = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
+
+        await logActivity('Logout', 'my account', req.user?.id);
 
         res.status(200).json({
             success: true,
@@ -191,6 +201,8 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
             name: name || user.name,
             email: email || user.email
         });
+
+        await logActivity('Atualização de perfil', 'my account', user.id);
 
         // Buscar usuário atualizado sem a senha
         const updatedUser = await User.findByPk(user.id, {

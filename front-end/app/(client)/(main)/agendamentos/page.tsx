@@ -50,7 +50,7 @@ export default function AppointmentsPage() {
                                 onClick={handleClick}
                                 className="px-9.25 text-4 font-semibold text-white"
                             >
-                                Ajustes de Agendamento
+                                Novo Agendamento
                             </Button>
                         }
                     />

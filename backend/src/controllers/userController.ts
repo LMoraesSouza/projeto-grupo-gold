@@ -4,7 +4,7 @@ import Permission from '../models/Permission';
 
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-        console.log('oioioi')
+
         const users = await User.findAll({
             include: [{
                 model: Permission,

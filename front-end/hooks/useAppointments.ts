@@ -11,13 +11,11 @@ export const useAppointments = () => {
     const [error, setError] = useState<string | null>(null);
 
     // Carregar agendamentos ao iniciar
-    const getAppointments = useCallback(async () => {
+    const getMyAppointments = useCallback(async () => {
         try {
-            console.log(user)
             if (user?.id) {
                 setLoading(true)
                 const appointmentsData = user?.role == 'ADMIN' ? await appointmentsService.getAll() : await appointmentsService.getByClient(user?.id);
-                console.log(appointmentsData, user?.id, user?.role);
                 setAppointments([...appointmentsData]);
             }
 
@@ -32,15 +30,15 @@ export const useAppointments = () => {
     }, [user?.id, user?.role]);
 
     useEffect(() => {
-        getAppointments();
-    }, [getAppointments]);
+        getMyAppointments();
+    }, [getMyAppointments]);
 
     const createAppointment = async (data: CreateAppointmentRequest) => {
         setLoading(true);
         setError(null);
         try {
             await appointmentsService.create(data);
-            getAppointments();
+            getMyAppointments();
         } catch (err: unknown) {
             setError((err as Error).message || 'Erro no logout');
         } finally {
@@ -54,7 +52,7 @@ export const useAppointments = () => {
         try {
             await appointmentsService.update(id, data);
 
-            getAppointments()
+            getMyAppointments()
 
 
         } catch (err: unknown) {
@@ -68,7 +66,7 @@ export const useAppointments = () => {
         appointments,
         loading,
         error,
-        getAppointments,
+        getMyAppointments,
         createAppointment,
         updateAppointment
     };

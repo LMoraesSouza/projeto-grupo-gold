@@ -74,19 +74,19 @@ class User extends Model<UserAttributes, UserCreationAttributes>
     }
 
     //hook de criação de permissões
-    // public static async createPermissions(user: User): Promise<void> {
-    //     Permission.create({
-    //         userId: user.id,
-    //         access: 'logs',
-    //         isActive: true
-    //     })
+    public static async createPermissions(user: User): Promise<void> {
+        Permission.create({
+            userId: user.id,
+            access: 'logs',
+            isActive: false
+        })
 
-    //     Permission.create({
-    //         userId: user.id,
-    //         access: 'appointments',
-    //         isActive: true
-    //     })
-    // }
+        Permission.create({
+            userId: user.id,
+            access: 'appointments',
+            isActive: false
+        })
+    }
 }
 
 User.init(
@@ -228,7 +228,7 @@ User.init(
         hooks: {
             beforeCreate: User.hashPassword,
             beforeUpdate: User.hashPassword,
-            // afterCreate: User.createPermissions,
+            afterCreate: User.createPermissions,
         }
     }
 );

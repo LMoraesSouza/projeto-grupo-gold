@@ -14,47 +14,45 @@ const route = {
         title: 'Agendamentos',
         description: 'Acompanhe todos os agendamentos de clientes de forma simples',
         href: ROUTES.ADMIN_DASHBOARD,
-        role: 'admin'
+        role: 'ADMIN'
     },
     [ROUTES.ADMIN_LOGS]: {
         title: 'Logs',
         description: 'Acompanhe todos as Logs de clientes',
         href: ROUTES.ADMIN_LOGS,
-        role: 'admin'
+        role: 'ADMIN'
     },
     [ROUTES.CLIENTS]: {
         title: 'Clientes',
         description: 'Overview de todos os clientes',
         href: ROUTES.CLIENTS,
-        role: 'admin'
+        role: 'ADMIN'
     },
     [ROUTES.DASHBOARD]: {
         title: 'Agendamentos',
         description: 'Acompante todos os seus agendamentos de forma simples',
         href: ROUTES.DASHBOARD,
-        role: 'client'
+        role: 'CLIENT'
     },
     [ROUTES.LOGS]: {
         title: 'Logs',
         description: 'Acompanhe todos as suas Logs',
         href: ROUTES.LOGS,
-        role: 'client'
+        role: 'CLIENT'
     },
     [ROUTES.MY_ACCOUNT]: {
         title: 'Minha Conta',
         description: 'Ajuste informações da sua conta de forma simples',
         href: ROUTES.MY_ACCOUNT,
-        role: 'client'
+        role: 'CLIENT'
     }
-
 }
 
 export function Header(){
     const [isOpen, setIsOpen] = useState(false)
     
     const pathname = usePathname();
-    
-
+    console.log(route, pathname)
     const title = route[pathname as keyof typeof route].title;
     const description = route[pathname as keyof typeof route].description;
 

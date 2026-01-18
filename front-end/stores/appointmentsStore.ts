@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { Appointment } from '@/types/entities';
 import { CreateAppointmentRequest, UpdateAppointmentRequest } from '@/types/requests';
 import { appointmentsService } from '@/services/appointments';
+import Cookies from 'js-cookie';
 
 interface AppointmentStore {
     appointments: Appointment[] | null;
@@ -11,7 +12,7 @@ interface AppointmentStore {
     setAppointments: (appointments: Appointment[] | null) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
-    getAppointments: (userId?: number, userRole?: string) => Promise<void>;
+    getMyAppointments: () => Promise<void>;
     createAppointment: (data: CreateAppointmentRequest) => Promise<void>;
     updateAppointment: (id: number, data: UpdateAppointmentRequest) => Promise<void>;
     reset: () => void;
@@ -36,22 +37,26 @@ export const useAppointmentStore = create<AppointmentStore>()(
                 error: null
             }),
 
-            getAppointments: async (userId?, userRole?) => {
+            getMyAppointments: async () => {
                 try {
                     set({ loading: true, error: null });
+                    const userCookies = Cookies.get('userData')
+
+                    let userData = null;
+
+                    if (userCookies) {
+                        userData = JSON.parse(userCookies);
+                    }
 
                     let appointmentsData: Appointment[] = [];
 
-                    if (userId) {
-                        if (userRole === 'ADMIN') {
-                            appointmentsData = await appointmentsService.getAll();
-                        } else {
-                            appointmentsData = await appointmentsService.getByClient(userId);
-                        }
+                    if (userData?.role === 'CLIENT') {
+                        console.log(userData)
+                        appointmentsData = await appointmentsService.getByClient(userData.id);
                     } else {
-                        //se der erro no id busca todos, mas o backend precisa de autenticação
                         appointmentsData = await appointmentsService.getAll();
                     }
+
 
                     set({
                         appointments: [...appointmentsData],
@@ -63,7 +68,7 @@ export const useAppointmentStore = create<AppointmentStore>()(
                         error: 'Erro ao carregar agendamentos',
                         loading: false
                     });
-                    console.error('Erro em getAppointments:', error);
+                    console.error('Erro em getMyAppointments:', error);
                 }
             },
 
@@ -74,7 +79,7 @@ export const useAppointmentStore = create<AppointmentStore>()(
                     await appointmentsService.create(data);
 
 
-                    await get().getAppointments();
+                    await get().getMyAppointments();
 
                 } catch (err) {
                     set({
@@ -93,11 +98,11 @@ export const useAppointmentStore = create<AppointmentStore>()(
 
                     const currentAppointments = get().appointments;
                     if (currentAppointments) {
-                        await get().getAppointments();
+                        await get().getMyAppointments();
                     }
 
                     // Depois sincroniza com o servidor
-                    await get().getAppointments();
+                    await get().getMyAppointments();
 
                 } catch (err) {
                     set({

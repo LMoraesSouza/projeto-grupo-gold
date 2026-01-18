@@ -5,7 +5,6 @@ import { ArrowUpDown } from "lucide-react"
 import { Actions } from "./actions"
 import { DataGridHeaderButton } from "@/components/data-grid-header-button"
 import { RiArrowUpDownFill } from "@remixicon/react"
-import { Badge } from "@/components/ui/badge"
 import { lightFormat } from "date-fns";
 import { User } from "@/types/entities"
 import { Permissions } from "./permissions"
@@ -44,8 +43,8 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => (
           <div className="space-y-0.5">
             <p className="text-3.5 font-medium color-black leading-5.5">{`${row.original.name} ${row.original.lastName}`}</p>
-            {row.original.role === 'CLIENT' && <span className="text-3 font-normal color-black leading-5.5">Cliente</span>}
-            {row.original.role === 'ADMIN' && <span className="text-3 font-normal color-black leading-5.5">Administrador</span>}
+            {row.original.role === 'CLIENT' && <p className="text-[12px] font-normal color-black leading-5.5">Cliente</p>}
+            {row.original.role === 'ADMIN' && <p className="text-[12px] font-normal color-black leading-5.5">Administrador</p>}
           </div>
         ),
     },

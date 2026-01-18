@@ -15,7 +15,7 @@ export function DataGridHeaderButton({
     
     return (
         <Button
-            className="flex flex-1 justify-start p-0"
+            className="flex flex-1 justify-start p-0 text-[12px]"
             variant="ghost"
             onClick={onClick}
         >
