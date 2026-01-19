@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -16,6 +17,7 @@ import z from 'zod';
 import { PasswordInput } from '@/components/password-input';
 import { useAuth } from '@/hooks/useAuth';
 import { LoginRequest } from '@/types/requests';
+import Link from 'next/link';
 
 const formSchema = z.object({
     email: z.string().nonempty("E-mail é obrigatório").email("E-mail inválido"),
@@ -26,7 +28,6 @@ type FormValues = z.input<typeof formSchema>;
 
 export function SignIn() {
     const { login } = useAuth();
-
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -34,6 +35,7 @@ export function SignIn() {
             password: '',
         }
     })
+    const email = form.watch("email")
 
     function handleSubmit(values: FormValues){
         const loginData: LoginRequest = {
@@ -52,47 +54,60 @@ export function SignIn() {
                 height={57}
             />
             <h1 className='font-semibold text-black text-[1.75rem] leading-12.5 '>Entre na sua conta</h1>
-            
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-3.75 bg-white p-7.5 rounded-md border-solid  border lg:w-md">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel><span className="font-semibold">E-mail</span>(Obrigatório)</FormLabel>
-                                <FormControl>
-                                    <Input 
-                                        type="email" 
-                                        {...field} 
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel><span className='font-semibold'>Senha de acesso</span>(Obrigatório)</FormLabel>
-                                <FormControl>
-                                     <PasswordInput 
-                                        {...field} 
-                                    /> 
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button 
-                        className='mt-1.25'
-                    >
-                        Acessar conta
-                    </Button>
-                </form>
-            </Form>
+
+            <div className='flex flex-col gap-3.75 bg-white p-7.5 rounded-md border-solid  border lg:w-md'>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="flex gap-3.75 flex-col ">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel><span className="font-semibold">E-mail</span>(Obrigatório)</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            type="email" 
+                                            {...field} 
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {
+                            email &&
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel><span className='font-semibold'>Senha de acesso</span>(Obrigatório)</FormLabel>
+                                        <FormControl>
+                                            <PasswordInput 
+                                                {...field} 
+                                            /> 
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        }
+                        <Button 
+                            disabled={!form.formState.isValid}
+                            className='mt-1.25'
+                        >
+                            Acessar conta
+                        </Button>
+                    </form>
+                </Form>
+                <div className='flex justify-between items-center'>
+                    <p className='leading-5 text-[14px] font-normal'>Ainda não tem um cadastro?</p>
+                    <Link href="/sign-up">
+                        <nav className='underline leading-4 text-[14px] font-black '>Cadastre-se</nav>
+                    </Link>
+                </div>
+            </div>
         </div>
     )
 }
